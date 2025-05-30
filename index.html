@@ -1,485 +1,243 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
-
 <head>
-
   <meta charset="UTF-8" />
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
   <title>NetControl - Gestão para Provedor</title>
-
   <script src="https://cdn.tailwindcss.com"></script>
-
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-
   <style>
-
     .sidebar { transition: all 0.3s ease; }
-
     .sidebar.collapsed { width: 70px; }
-
     .sidebar.collapsed .sidebar-text, .sidebar.collapsed .logo-text { display: none; }
-
     .sidebar.collapsed .nav-item { justify-content: center; }
-
     .main-content { transition: all 0.3s ease; }
-
     .sidebar.collapsed + .main-content { margin-left: 70px; }
-
     .map-container {
-
       height: 300px; background-color: #e5e7eb; display: flex; align-items: center;
-
       justify-content: center; border-radius: 0.5rem;
-
     }
-
     .ticket-status-new { border-left: 4px solid #3b82f6; }
-
     .ticket-status-in-progress { border-left: 4px solid #f59e0b; }
-
     .ticket-status-resolved { border-left: 4px solid #10b981; }
-
     .ticket-status-cancelled { border-left: 4px solid #ef4444; }
-
   </style>
-
 </head>
-
 <body class="bg-gray-100">
-
 <div class="flex h-screen overflow-hidden">
-
   <!-- Sidebar -->
-
   <div class="sidebar bg-blue-800 text-white w-64 flex flex-col">
-
     <div class="p-4 flex items-center space-x-2 border-b border-blue-700">
-
       <i class="fas fa-wifi text-2xl"></i>
-
       <span class="logo-text text-xl font-bold">NetControl</span>
-
     </div>
-
     <div class="p-4 border-b border-blue-700">
-
       <div class="flex items-center space-x-3">
-
         <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center">
-
           <span class="text-lg font-semibold">AD</span>
-
         </div>
-
         <div class="sidebar-text">
-
           <p class="font-medium">Admin</p>
-
           <p class="text-xs text-blue-200">Administrador</p>
-
         </div>
-
       </div>
-
     </div>
-
     <nav class="flex-1 overflow-y-auto">
-
       <div class="p-2">
-
         <p class="sidebar-text px-3 py-2 text-xs uppercase text-blue-300 font-semibold">Menu Principal</p>
-
         <a href="#" class="nav-item flex items-center space-x-3 px-3 py-3 rounded hover:bg-blue-700 text-blue-100 hover:text-white" onclick="showSection('dashboard')">
-
           <i class="fas fa-tachometer-alt"></i>
-
           <span class="sidebar-text">Dashboard</span>
-
         </a>
-
         <a href="#" class="nav-item flex items-center space-x-3 px-3 py-3 rounded hover:bg-blue-700 text-blue-100 hover:text-white" onclick="showSection('clientes')">
-
           <i class="fas fa-users"></i>
-
           <span class="sidebar-text">Clientes</span>
-
         </a>
-
         <a href="#" class="nav-item flex items-center space-x-3 px-3 py-3 rounded hover:bg-blue-700 text-blue-100 hover:text-white" onclick="showSection('ordens-servico')">
-
           <i class="fas fa-clipboard-list"></i>
-
           <span class="sidebar-text">Ordens de Serviço</span>
-
         </a>
-
         <a href="#" class="nav-item flex items-center space-x-3 px-3 py-3 rounded hover:bg-blue-700 text-blue-100 hover:text-white" onclick="showSection('help-desk')">
-
           <i class="fas fa-headset"></i>
-
           <span class="sidebar-text">Help Desk</span>
-
         </a>
-
         <a href="#" class="nav-item flex items-center space-x-3 px-3 py-3 rounded hover:bg-blue-700 text-blue-100 hover:text-white" onclick="showSection('relatorios')">
-
           <i class="fas fa-chart-bar"></i>
-
           <span class="sidebar-text">Relatórios</span>
-
         </a>
-
       </div>
-
       <div class="p-2 border-t border-blue-700">
-
         <p class="sidebar-text px-3 py-2 text-xs uppercase text-blue-300 font-semibold">Configurações</p>
-
         <a href="#" class="nav-item flex items-center space-x-3 px-3 py-3 rounded hover:bg-blue-700 text-blue-100 hover:text-white">
-
           <i class="fas fa-cog"></i>
-
           <span class="sidebar-text">Configurações</span>
-
         </a>
-
         <a href="#" class="nav-item flex items-center space-x-3 px-3 py-3 rounded hover:bg-blue-700 text-blue-100 hover:text-white">
-
           <i class="fas fa-sign-out-alt"></i>
-
           <span class="sidebar-text">Sair</span>
-
         </a>
-
       </div>
-
     </nav>
-
     <div class="p-3 border-t border-blue-700 flex justify-center">
-
       <button onclick="toggleSidebar()" class="text-blue-200 hover:text-white">
-
         <i class="fas fa-chevron-left"></i>
-
       </button>
-
     </div>
-
   </div>
-
-
 
   <!-- Main Content -->
-
   <div class="main-content flex-1 overflow-y-auto ml-64">
-
     <header class="bg-white shadow-sm">
-
       <div class="flex justify-between items-center p-4">
-
         <h1 class="text-2xl font-semibold text-gray-800" id="page-title">Dashboard</h1>
-
         <div class="flex items-center space-x-4">
-
           <div class="relative">
-
             <input type="text" placeholder="Pesquisar..." class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-
             <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-
           </div>
-
           <button class="p-2 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200">
-
             <i class="fas fa-bell"></i>
-
           </button>
-
         </div>
-
       </div>
-
     </header>
 
-
-
     <!-- Seção Dashboard (restaurada completa) -->
-
     <section id="dashboard-section" class="p-6">
-
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-
         <div class="bg-white rounded-lg shadow p-6">
-
           <div class="flex justify-between items-center">
-
             <div><p class="text-gray-500">Clientes Ativos</p><h3 class="text-2xl font-bold">1.248</h3></div>
-
             <div class="bg-blue-100 p-3 rounded-full"><i class="fas fa-users text-blue-500 text-xl"></i></div>
-
           </div>
-
           <p class="text-green-500 text-sm mt-2"><i class="fas fa-arrow-up"></i> 12% desde o último mês</p>
-
         </div>
-
         <div class="bg-white rounded-lg shadow p-6">
-
           <div class="flex justify-between items-center">
-
             <div><p class="text-gray-500">OS Pendentes</p><h3 class="text-2xl font-bold">24</h3></div>
-
             <div class="bg-orange-100 p-3 rounded-full"><i class="fas fa-clipboard-list text-orange-500 text-xl"></i></div>
-
           </div>
-
           <p class="text-red-500 text-sm mt-2"><i class="fas fa-arrow-down"></i> 5% desde o último mês</p>
-
         </div>
-
         <div class="bg-white rounded-lg shadow p-6">
-
           <div class="flex justify-between items-center">
-
             <div><p class="text-gray-500">Tickets Abertos</p><h3 class="text-2xl font-bold">18</h3></div>
-
             <div class="bg-purple-100 p-3 rounded-full"><i class="fas fa-headset text-purple-500 text-xl"></i></div>
-
           </div>
-
           <p class="text-green-500 text-sm mt-2"><i class="fas fa-arrow-up"></i> 8% desde o último mês</p>
-
         </div>
-
         <div class="bg-white rounded-lg shadow p-6">
-
           <div class="flex justify-between items-center">
-
             <div><p class="text-gray-500">Faturamento</p><h3 class="text-2xl font-bold">R$ 58.240</h3></div>
-
             <div class="bg-green-100 p-3 rounded-full"><i class="fas fa-dollar-sign text-green-500 text-xl"></i></div>
-
           </div>
-
           <p class="text-green-500 text-sm mt-2"><i class="fas fa-arrow-up"></i> 15% desde o último mês</p>
-
         </div>
-
       </div>
-
-
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-
         <div class="bg-white rounded-lg shadow p-6 lg:col-span-2">
-
           <div class="flex justify-between items-center mb-4">
-
             <h3 class="text-lg font-semibold">Atividades Recentes</h3>
-
             <button class="text-blue-500 text-sm">Ver tudo</button>
-
           </div>
-
           <div class="space-y-4">
-
             <div class="flex items-start space-x-3">
-
               <div class="bg-blue-100 p-2 rounded-full"><i class="fas fa-user-plus text-blue-500"></i></div>
-
               <div><p class="font-medium">Novo cliente cadastrado</p><p class="text-sm text-gray-500">João Silva foi cadastrado como novo cliente</p><p class="text-xs text-gray-400">2 horas atrás</p></div>
-
             </div>
-
             <div class="flex items-start space-x-3">
-
               <div class="bg-orange-100 p-2 rounded-full"><i class="fas fa-tools text-orange-500"></i></div>
-
               <div><p class="font-medium">OS #1245 concluída</p><p class="text-sm text-gray-500">Instalação concluída para Maria Souza</p><p class="text-xs text-gray-400">5 horas atrás</p></div>
-
             </div>
-
             <div class="flex items-start space-x-3">
-
               <div class="bg-purple-100 p-2 rounded-full"><i class="fas fa-headset text-purple-500"></i></div>
-
               <div><p class="font-medium">Novo ticket aberto</p><p class="text-sm text-gray-500">Carlos Oliveira reportou lentidão na conexão</p><p class="text-xs text-gray-400">1 dia atrás</p></div>
-
             </div>
-
           </div>
-
         </div>
-
         <div class="bg-white rounded-lg shadow p-6">
-
           <div class="flex justify-between items-center mb-4">
-
             <h3 class="text-lg font-semibold">Status da Rede</h3>
-
             <button class="text-blue-500 text-sm">Detalhes</button>
-
           </div>
-
           <div class="space-y-4">
-
             <div>
-
               <div class="flex justify-between mb-1"><span class="text-sm font-medium">Uptime</span><span class="text-sm font-medium">99.8%</span></div>
-
               <div class="w-full bg-gray-200 rounded-full h-2.5"><div class="bg-green-500 h-2.5 rounded-full" style="width: 99.8%"></div></div>
-
             </div>
-
             <div>
-
               <div class="flex justify-between mb-1"><span class="text-sm font-medium">Utilização de banda</span><span class="text-sm font-medium">65%</span></div>
-
               <div class="w-full bg-gray-200 rounded-full h-2.5"><div class="bg-blue-500 h-2.5 rounded-full" style="width: 65%"></div></div>
-
             </div>
-
             <div>
-
               <div class="flex justify-between mb-1"><span class="text-sm font-medium">Clientes online</span><span class="text-sm font-medium">1.024/1.248</span></div>
-
               <div class="w-full bg-gray-200 rounded-full h-2.5"><div class="bg-purple-500 h-2.5 rounded-full" style="width: 82%"></div></div>
-
             </div>
-
           </div>
-
           <div class="mt-6">
-
             <h4 class="text-sm font-semibold mb-2">Alertas</h4>
-
             <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 rounded">
-
               <div class="flex items-start">
-
                 <i class="fas fa-exclamation-circle text-yellow-500"></i>
-
                 <p class="ml-3 text-sm text-yellow-700">Manutenção programada para amanhã às 02:00</p>
-
               </div>
-
             </div>
-
           </div>
-
         </div>
-
       </div>
-
-
 
       <div class="bg-white rounded-lg shadow p-6 mb-6">
-
         <div class="flex justify-between items-center mb-4">
-
           <h3 class="text-lg font-semibold">Mapa de Clientes</h3>
-
           <div class="flex space-x-2">
-
             <button class="px-3 py-1 text-sm bg-blue-500 text-white rounded">Região 1</button>
-
             <button class="px-3 py-1 text-sm bg-gray-200 rounded">Região 2</button>
-
             <button class="px-3 py-1 text-sm bg-gray-200 rounded">Região 3</button>
-
           </div>
-
         </div>
-
         <div class="map-container">
-
           <div class="text-center">
-
             <i class="fas fa-map-marked-alt text-4xl text-gray-400 mb-2"></i>
-
             <p class="text-gray-500">Mapa interativo de clientes</p>
-
             <p class="text-sm text-gray-400">Integração com Google Maps ou OpenStreetMap</p>
-
           </div>
-
         </div>
-
       </div>
-
     </section>
 
-
-
     <!-- Outras seções -->
-
     <section id="clientes-section" class="p-6 hidden"><div class="bg-white p-6 rounded-lg shadow">Conteúdo de Clientes</div></section>
-
     <section id="ordens-servico-section" class="p-6 hidden"><div class="bg-white p-6 rounded-lg shadow">Conteúdo de Ordens de Serviço</div></section>
-
     <section id="help-desk-section" class="p-6 hidden"><div class="bg-white p-6 rounded-lg shadow">Conteúdo do Help Desk</div></section>
-
     <section id="relatorios-section" class="p-6 hidden"><div class="bg-white p-6 rounded-lg shadow">Conteúdo de Relatórios</div></section>
-
   </div>
-
 </div>
 
-
-
 <script>
-
   function showSection(section) {
-
     const sections = ['dashboard', 'clientes', 'ordens-servico', 'help-desk', 'relatorios'];
-
     sections.forEach(sec => {
-
       const el = document.getElementById(`${sec}-section`);
-
       if (el) el.classList.add('hidden');
-
     });
-
     const active = document.getElementById(`${section}-section`);
-
     if (active) active.classList.remove('hidden');
-
     const titles = {
-
       'dashboard': 'Dashboard',
-
       'clientes': 'Clientes',
-
       'ordens-servico': 'Ordens de Serviço',
-
       'help-desk': 'Help Desk',
-
       'relatorios': 'Relatórios'
-
     };
-
     document.getElementById('page-title').textContent = titles[section] || '';
-
   }
-
   document.addEventListener("DOMContentLoaded", function () {
-
     showSection('dashboard');
-
   });
-
   function toggleSidebar() {
-
     document.querySelector('.sidebar').classList.toggle('collapsed');
-
   }
-
 </script>
-
 </body>
-
 </html>
