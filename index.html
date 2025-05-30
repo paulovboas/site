@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistema de Gestão</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <div class="sidebar w-64 bg-gray-800 text-white flex flex-col">
+      <div class="p-6 font-bold text-xl border-b border-gray-700">
+        Painel
+      </div>
+      <nav class="flex-1 p-4 space-y-2">
+        <button onclick="showSection('dashboard')" class="w-full text-left hover:bg-gray-700 px-3 py-2 rounded">Dashboard</button>
+        <button onclick="showSection('clientes')" class="w-full text-left hover:bg-gray-700 px-3 py-2 rounded">Clientes</button>
+        <button onclick="showSection('ordens-servico')" class="w-full text-left hover:bg-gray-700 px-3 py-2 rounded">Ordens de Serviço</button>
+        <button onclick="showSection('help-desk')" class="w-full text-left hover:bg-gray-700 px-3 py-2 rounded">Help Desk</button>
+        <button onclick="showSection('relatorios')" class="w-full text-left hover:bg-gray-700 px-3 py-2 rounded">Relatórios</button>
+      </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content flex-1 p-6 overflow-y-auto">
+      <h1 id="page-title" class="text-2xl font-bold mb-6">Dashboard</h1>
+
+      <!-- Dashboard Section -->
+      <section id="dashboard-section" data-title="Dashboard">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-lg font-semibold mb-2">Visão Geral</h2>
+            <p>Bem-vindo ao sistema de gestão.</p>
+          </div>
+          <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-lg font-semibold mb-2">Estatísticas</h2>
+            <p>Acompanhe os principais indicadores aqui.</p>
+          </div>
+          <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-lg font-semibold mb-2">Notificações</h2>
+            <p>Sem novas notificações.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Clientes Section -->
+      <section id="clientes-section" data-title="Clientes" class="hidden">
+        <div class="bg-white rounded-lg shadow p-6">
+          <h2 class="text-xl font-bold mb-4">Cadastro de Cliente</h2>
+          <form id="clienteForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Nome</label>
+              <input id="nome" type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" placeholder="João da Silva">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700">CPF</label>
+              <input id="cpf" type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" placeholder="000.000.000-00">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Endereço</label>
+              <input id="endereco" type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" placeholder="Rua, nº, bairro">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Telefone</label>
+              <input id="telefone" type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" placeholder="(00) 91234-5678">
+            </div>
+            <div class="md:col-span-2">
+              <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Cadastrar Cliente</button>
+            </div>
+          </form>
+
+          <div class="mt-8">
+            <h3 class="text-lg font-semibold mb-2">Clientes Cadastrados</h3>
+            <ul id="clientesList" class="list-disc pl-6 text-gray-700"></ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Outras seções -->
+      <section id="ordens-servico-section" data-title="Ordens de Serviço" class="hidden">
+        <div class="bg-white rounded-lg shadow p-6">
+          <h2 class="text-xl font-bold mb-4">Ordens de Serviço</h2>
+          <p>Lista de ordens de serviço em breve...</p>
+        </div>
+      </section>
+
+      <section id="help-desk-section" data-title="Help Desk" class="hidden">
+        <div class="bg-white rounded-lg shadow p-6">
+          <h2 class="text-xl font-bold mb-4">Tickets de Suporte</h2>
+          <p>Sistema de help desk em construção...</p>
+        </div>
+      </section>
+
+      <section id="relatorios-section" data-title="Relatórios" class="hidden">
+        <div class="bg-white rounded-lg shadow p-6">
+          <h2 class="text-xl font-bold mb-4">Relatórios</h2>
+          <p>Área de relatórios em breve...</p>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    function showSection(sectionId) {
+      const sections = document.querySelectorAll("section");
+      sections.forEach((section) => section.style.display = "none");
+
+      const selected = document.getElementById(`${sectionId}-section`);
+      if (selected) {
+        selected.style.display = "block";
+        document.getElementById("page-title").innerText = selected.getAttribute("data-title");
+      }
+    }
+
+    // Função para salvar cliente localmente
+    document.addEventListener("DOMContentLoaded", () => {
+      showSection("dashboard");
+
+      const form = document.getElementById("clienteForm");
+      const list = document.getElementById("clientesList");
+
+      function renderClientes() {
+        const clientes = JSON.parse(localStorage.getItem("clientes") || "[]");
+        list.innerHTML = "";
+        clientes.forEach((cliente) => {
+          const li = document.createElement("li");
+          li.textContent = `${cliente.nome} - ${cliente.cpf} - ${cliente.telefone}`;
+          list.appendChild(li);
+        });
+      }
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const cliente = {
+          nome: document.getElementById("nome").value,
+          cpf: document.getElementById("cpf").value,
+          endereco: document.getElementById("endereco").value,
+          telefone: document.getElementById("telefone").value,
+        };
+        const clientes = JSON.parse(localStorage.getItem("clientes") || "[]");
+        clientes.push(cliente);
+        localStorage.setItem("clientes", JSON.stringify(clientes));
+        form.reset();
+        renderClientes();
+      });
+
+      renderClientes();
+    });
+  </script>
+</body>
+</html>
